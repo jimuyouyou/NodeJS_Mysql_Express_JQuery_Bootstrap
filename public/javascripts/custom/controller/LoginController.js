@@ -1,0 +1,3 @@
+function LoginController($scope,  $location) {
+
+}

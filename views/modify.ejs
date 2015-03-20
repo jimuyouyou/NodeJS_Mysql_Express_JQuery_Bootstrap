@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= locals.title %></title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body class='mr50'>
+	<%- include('header'); -%>
+	<hr />
+		<a class='btn btn-success' href="/">List all articles</a>
+	<h3>Modify existing record</h3>
+	<div id='err' class='alert alert-warning' style='display: none'></div>
+	<div id='result' class='alert alert-success' style='display: none'></div>
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label class="control-label col-xs-1" for="inputEmail">Title:</label>
+			<div class="col-xs-9">
+				<input type="text" class="form-control" name="title" id="title" required placeholder='Title' />
+			</div>
+			<p>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-1" for="inputEmail">Content:</label>
+			<p>
+			<div class="col-xs-9">
+				<textarea name="content" rows='5' class="form-control" id="content" required placeholder='Content'></textarea>
+			</div>
+		</div>
+		<p>
+			<input type="button" value="Modify" onclick='modify();' class='btn btn-warning' />
+			<input type="hidden" id='blogId' name='blogId' />
+	</form>
+	<%- include('footer'); -%>
+</body>
+<script>
+	$(document).ready(function() {
+		var data = JSON.parse(<%- locals.data %>);
+		$('#blogId').val(data.id);
+		$('#title').val(data.title);
+		$('#content').val(data.content);
+	});
+
+	function modify() {
+		$.get('/update', {
+			id : $('#blogId').val(),
+			title : $('#title').val(),
+			content : $('#content').val()
+		}, function(data) {
+			var err = data.err;
+			if (err && err.length > 0) {
+				$('#err').html(err);
+				$('#err').show();
+			}
+
+			var dt = data.data;
+			if (dt && dt.length > 0) {
+				$('#result').html('You have just successfuly modified one record!');
+				$('#result').show();
+			}
+		});
+	}
+</script>
+</html>

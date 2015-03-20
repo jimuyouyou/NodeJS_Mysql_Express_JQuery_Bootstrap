@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= title %></title>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body class='mr50'>
+	<%- include('header'); -%>
+
+	<h1>Welcome to NodeJS CMS</h1>
+	<div id='err'></div>
+	<a href="/add" class='btn btn-success'>New Article</a><p>
+	<div>
+		<table id='blogList' class="table table-bordered">
+			<tr>
+				<th>Latest Articles</th>
+				<th>Actions</th>
+			</tr>
+		</table>
+	</div>
+
+	<%- include('footer'); -%>
+</body>
+<script>
+	$(document).ready(
+			function() {
+				$.get('/list', {}, function(data) {
+					var err = data.err;
+					if (err && err.length > 0) {
+						$('#err').html(err);
+					}
+
+					var dt = JSON.parse(data.data);
+					if (dt && dt.length > 0) {
+						var sResult = '';
+						for (var i = 0; i < dt.length; i++) {
+							sResult += '<tr><td>' + dt[i].title;
+							sResult += "</td><td><a class='btn btn-warning' href='/modify?id="
+									+ dt[i].id + "'>Modify</a></td></tr>";
+						}
+					}
+
+					$('#blogList').append(sResult);
+				});
+			});
+</script>
+</html>
